@@ -1,6 +1,6 @@
 {
   "name": "evoldata",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "module": "lib/esm/index.js",
   "main": "lib/esm/index.js",
   "types": "lib/types/index.d.ts",
@@ -20,5 +20,9 @@
   "type": "module",
   "files": [
     "lib"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jondotsoy/evoldata.git"
+  }
 }
