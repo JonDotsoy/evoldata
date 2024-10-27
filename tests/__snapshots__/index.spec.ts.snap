@@ -1,0 +1,29 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parse() should parse a payload string into an object 1`] = `
+{
+  "client": {
+    "delay": 100,
+    "logs": [
+      "Connected to server.",
+      
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+    ],
+    "pid": 1000,
+    "state": "unstable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "commands": [
+      "date",
+    ],
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;

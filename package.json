@@ -1,0 +1,24 @@
+{
+  "name": "evoldata",
+  "version": "0.9.0",
+  "module": "lib/esm/index.js",
+  "main": "lib/esm/index.js",
+  "types": "lib/types/index.d.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0",
+    "prettier": "*"
+  },
+  "description": "A library for efficiently managing and manipulating evolving data structures in JavaScript.",
+  "scripts": {
+    "prepack": "make build",
+    "fmt": "prettier -w ."
+  },
+  "type": "module",
+  "files": [
+    "lib"
+  ]
+}

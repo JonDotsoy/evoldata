@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "target": "es2015",
+    "noEmit": false,
+    "allowImportingTsExtensions": false
+  },
+  "exclude": ["tests", "lib"]
+}
