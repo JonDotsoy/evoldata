@@ -24,5 +24,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jondotsoy/evoldata.git"
+  },
+  "dependencies": {
+    "@jondotsoy/flags": "^2.2.0",
+    "json5": "^2.2.3",
+    "streamable-tools": "^0.3.0",
+    "yaml": "^2.6.0"
   }
 }

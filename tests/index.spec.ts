@@ -1,5 +1,12 @@
-import { describe, it, expect } from "bun:test";
-import { parse, utils, createEventsWritable } from "../src";
+import * as YAML from "yaml";
+import { describe, it, expect, mock } from "bun:test";
+import {
+  parse,
+  utils,
+  createEventsWritable,
+  ParsingObjectStream,
+} from "../src";
+import { SplitStream, readableStreamToIterable } from "streamable-tools";
 
 const payload = `1730041100000	=	owner.name	${JSON.stringify("John")}
 1730041100000	=	owner.runOn	${JSON.stringify("Ubuntu 30.04")}
@@ -170,4 +177,55 @@ it("createEventsWritable() should create a writable stream that emits events as 
   const lines = text.split("\n");
   expect(lines.at(0)).toMatch('=\tname\t"Jhon"');
   expect(lines.at(1)).toMatch("=\tage\t32");
+});
+
+const createSampleReadable = () =>
+  new ReadableStream<Uint8Array>({
+    start(ctrl) {
+      const line = async (line: string) =>
+        ctrl.enqueue(new TextEncoder().encode(`${line}\n`));
+
+      line(`1730041100000	=	owner.name	"John"`);
+      line(`1730041100000	=	owner.runOn	"Ubuntu 30.04"`);
+      line(`1730041200000	=	server.ip	"10.0.0.1"`);
+      line(`1730041200000	=	server.port	22`);
+      line(`1730041300000	=	client.state	"stable"`);
+      line(`1730041300000	=	client.pid	1000`);
+      line(`1730041300000	+	client.logs	"Connected to server."`);
+      line(`1730041400000	=	client.delay	100`);
+      line(`1730041500000	=	client.state	"unstable"`);
+      line(`1730041500000	+	server.commands	"date"`);
+      line(`1730041600000	+	client.logs	"Sun Oct 27 12:12:48 -03 2024\n"`);
+      line(`1730041600000	=	done	true`);
+
+      ctrl.close();
+    },
+  });
+
+it("StreamSnapParsing should parse a stream of events into an array of objects", async () => {
+  const readable = createSampleReadable()
+    .pipeThrough(new SplitStream())
+    .pipeThrough(new ParsingObjectStream());
+  for await (const snap of readableStreamToIterable(readable)) {
+    expect(snap).toMatchSnapshot();
+  }
+});
+
+it("ParsingObjectStream.store() should create a store that updates on each event", async () => {
+  const update = mock();
+
+  const store = ParsingObjectStream.store(createSampleReadable());
+
+  update(JSON.stringify(store.getSnapshot()));
+
+  await new Promise<void>((done) => {
+    store.subscribe(() => {
+      const snapshot = store.getSnapshot();
+      update(JSON.stringify(snapshot, null, 2));
+      if (snapshot.done) done();
+    });
+  });
+
+  expect(update).toBeCalledTimes(12);
+  expect(update.mock.calls).toMatchSnapshot();
 });

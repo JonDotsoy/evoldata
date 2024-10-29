@@ -27,3 +27,394 @@ exports[`parse() should parse a payload string into an object 1`] = `
   },
 }
 `;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 1`] = `
+{
+  "owner": {
+    "name": "John",
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 2`] = `
+{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 3`] = `
+{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "ip": "10.0.0.1",
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 4`] = `
+{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 5`] = `
+{
+  "client": {
+    "state": "stable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 6`] = `
+{
+  "client": {
+    "pid": 1000,
+    "state": "stable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 7`] = `
+{
+  "client": {
+    "logs": [
+      "Connected to server.",
+    ],
+    "pid": 1000,
+    "state": "stable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 8`] = `
+{
+  "client": {
+    "delay": 100,
+    "logs": [
+      "Connected to server.",
+    ],
+    "pid": 1000,
+    "state": "stable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 9`] = `
+{
+  "client": {
+    "delay": 100,
+    "logs": [
+      "Connected to server.",
+    ],
+    "pid": 1000,
+    "state": "unstable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 10`] = `
+{
+  "client": {
+    "delay": 100,
+    "logs": [
+      "Connected to server.",
+    ],
+    "pid": 1000,
+    "state": "unstable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "commands": [
+      "date",
+    ],
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 11`] = `
+{
+  "client": {
+    "delay": 100,
+    "logs": [
+      "Connected to server.",
+    ],
+    "pid": 1000,
+    "state": "unstable",
+  },
+  "done": true,
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "commands": [
+      "date",
+    ],
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`ParsingObjectStream.store() should create a store that updates on each event 1`] = `
+[
+  [
+    "{}",
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John"
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1"
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22
+  },
+  "client": {
+    "state": "stable"
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22
+  },
+  "client": {
+    "state": "stable",
+    "pid": 1000
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22
+  },
+  "client": {
+    "state": "stable",
+    "pid": 1000,
+    "logs": [
+      "Connected to server."
+    ]
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22
+  },
+  "client": {
+    "state": "stable",
+    "pid": 1000,
+    "logs": [
+      "Connected to server."
+    ],
+    "delay": 100
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22
+  },
+  "client": {
+    "state": "unstable",
+    "pid": 1000,
+    "logs": [
+      "Connected to server."
+    ],
+    "delay": 100
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+    "commands": [
+      "date"
+    ]
+  },
+  "client": {
+    "state": "unstable",
+    "pid": 1000,
+    "logs": [
+      "Connected to server."
+    ],
+    "delay": 100
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+    "commands": [
+      "date"
+    ]
+  },
+  "client": {
+    "state": "unstable",
+    "pid": 1000,
+    "logs": [
+      "Connected to server."
+    ],
+    "delay": 100
+  },
+  "done": true
+}"
+,
+  ],
+]
+`;

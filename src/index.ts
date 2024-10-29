@@ -1,3 +1,5 @@
+import { readableStreamToIterable, SplitStream } from "streamable-tools";
+
 type Payload = string;
 type Path = number | string;
 type Metadata = {
@@ -171,3 +173,57 @@ export const createEventsWritable = () => {
     },
   };
 };
+
+export class ParsingObjectStream extends TransformStream<Uint8Array, any> {
+  #obj: { context: any } = { context: {} };
+
+  constructor() {
+    super({
+      transform: async (chunk, controller) => {
+        try {
+          for (const metadata of transformLines(chunk)) {
+            if (metadata.type === "=") {
+              utils.set(this.#obj.context, metadata.path, metadata.value);
+            }
+            if (metadata.type === "+") {
+              utils.add(this.#obj.context, metadata.path, metadata.value);
+            }
+            controller.enqueue(this.#obj.context);
+          }
+        } catch {}
+      },
+    });
+  }
+
+  static iterable(readable: ReadableStream<Uint8Array>) {
+    return readableStreamToIterable(
+      readable
+        .pipeThrough(new SplitStream())
+        .pipeThrough(new ParsingObjectStream()),
+    );
+  }
+
+  static store(readable: ReadableStream<Uint8Array>) {
+    const snapshot: { current: any } = { current: {} };
+    const listeners = new Set<() => void>();
+
+    const loop = async () => {
+      for await (const snap of ParsingObjectStream.iterable(readable)) {
+        snapshot.current = snap;
+        listeners.forEach((listener) => listener());
+      }
+    };
+
+    loop()
+      .catch((err) => console.error(err))
+      .finally();
+
+    const subscribe = (listener: () => void) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    };
+    const getSnapshot = () => snapshot.current;
+
+    return { subscribe, getSnapshot };
+  }
+}
