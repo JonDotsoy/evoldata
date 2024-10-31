@@ -11,6 +11,7 @@ permissions:
 jobs:
   release:
     uses: jondotsoy/jondotsoy/.github/workflows/bun-release-package.yml@main
+    permissions:
+      id-token: write
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
