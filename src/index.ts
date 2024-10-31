@@ -40,7 +40,7 @@ export namespace utils {
   export const selectRecordChild = (object: unknown, paths: Path[]) => {};
 
   export const set = (object: unknown, paths: Path[], value: unknown) => {
-    const childPath = paths.splice(0, paths.length - 1);
+    const childPath = paths.slice(0, paths.length - 1);
     const property = paths[paths.length - 1];
 
     const child = selectChild(object, childPath, () => ({}));
@@ -52,7 +52,7 @@ export namespace utils {
 
   export const add = (object: unknown, paths: Path[], value: unknown) => {
     if (paths.length < 1) return;
-    const parentPaths = paths.splice(0, paths.length - 1);
+    const parentPaths = paths.slice(0, paths.length - 1);
     const property = paths[paths.length - 1];
     const parentSelect = selectChild(object, parentPaths, () => ({}));
     const parent: any = isRecord(parentSelect) ? parentSelect : {};

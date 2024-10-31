@@ -229,3 +229,21 @@ it("ParsingObjectStream.store() should create a store that updates on each event
   expect(update).toBeCalledTimes(12);
   expect(update.mock.calls).toMatchSnapshot();
 });
+
+it("utils.set() should not mutate the path array", () => {
+  const obj: any = { a: { b: {} } };
+  const path: string[] = ["a", "b", "c", "d"];
+
+  utils.set(obj, path, "e");
+
+  expect(path).toEqual(["a", "b", "c", "d"]);
+});
+
+it("utils.add() should not mutate the path array", () => {
+  const obj: any = { a: { b: {} } };
+  const path: string[] = ["a", "b", "c", "d"];
+
+  utils.add(obj, path, "e");
+
+  expect(path).toEqual(["a", "b", "c", "d"]);
+});
