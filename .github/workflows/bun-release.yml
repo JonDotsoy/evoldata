@@ -1,0 +1,10 @@
+name: Bun Release
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  release:
+    uses: jondotsoy/jondotsoy/.github/workflows/bun-release-package.yml@main
