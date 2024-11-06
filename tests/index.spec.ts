@@ -1,5 +1,5 @@
 import * as YAML from "yaml";
-import { describe, it, expect, mock } from "bun:test";
+import { describe, it, expect, mock, setSystemTime, beforeAll } from "bun:test";
 import {
   parse,
   utils,
@@ -7,6 +7,8 @@ import {
   ParsingObjectStream,
 } from "../src";
 import { SplitStream, readableStreamToIterable } from "streamable-tools";
+
+setSystemTime(1730041100000);
 
 const payload = `1730041100000	=	owner.name	${JSON.stringify("John")}
 1730041100000	=	owner.runOn	${JSON.stringify("Ubuntu 30.04")}
@@ -246,4 +248,50 @@ it("utils.add() should not mutate the path array", () => {
   utils.add(obj, path, "e");
 
   expect(path).toEqual(["a", "b", "c", "d"]);
+});
+
+it("createEventsWritable() should create a writable stream that emits events as strings in correct order", async () => {
+  const { readable, set, add, close } = createEventsWritable();
+
+  const obj = {
+    workflow: { "01JBT4GF91CBPS9ZYZF7TZGTPP": [{ jobs: { "2": {} } }] },
+  };
+  const path = [
+    "workflow",
+    "01JBT4GF91CBPS9ZYZF7TZGTPP",
+    0,
+    "jobs",
+    "2",
+    "steps",
+    6,
+    "messages",
+  ];
+
+  set(["workflow", "01JBT4GF91CBPS9ZYZF7TZGTPP", 0], {});
+  set(["workflow", "01JBT4GF91CBPS9ZYZF7TZGTPP", 0, "jobs"], {});
+  set(["workflow", "01JBT4GF91CBPS9ZYZF7TZGTPP", 0, "jobs", "2", "steps"], {});
+  set(
+    ["workflow", "01JBT4GF91CBPS9ZYZF7TZGTPP", 0, "jobs", "2", "steps", 6],
+    {},
+  );
+  add(
+    [
+      "workflow",
+      "01JBT4GF91CBPS9ZYZF7TZGTPP",
+      0,
+      "jobs",
+      "2",
+      "steps",
+      6,
+      "messages",
+    ],
+    { timestamp: 1730675231882, type: "log" },
+  );
+  set(
+    ["workflow", "01JBT4GF91CBPS9ZYZF7TZGTPP", 0, "jobs", "2", "steps", 5],
+    {},
+  );
+  close();
+
+  expect(await Bun.readableStreamToText(readable)).toMatchSnapshot();
 });

@@ -418,3 +418,13 @@ exports[`ParsingObjectStream.store() should create a store that updates on each 
   ],
 ]
 `;
+
+exports[`createEventsWritable() should create a writable stream that emits events as strings in correct order 1`] = `
+"1730041100000	=	workflow.01JBT4GF91CBPS9ZYZF7TZGTPP.0	{}
+1730041100000	=	workflow.01JBT4GF91CBPS9ZYZF7TZGTPP.0.jobs	{}
+1730041100000	=	workflow.01JBT4GF91CBPS9ZYZF7TZGTPP.0.jobs.2.steps	{}
+1730041100000	=	workflow.01JBT4GF91CBPS9ZYZF7TZGTPP.0.jobs.2.steps.6	{}
+1730041100000	+	workflow.01JBT4GF91CBPS9ZYZF7TZGTPP.0.jobs.2.steps.6.messages	{"timestamp":1730675231882,"type":"log"}
+1730041100000	=	workflow.01JBT4GF91CBPS9ZYZF7TZGTPP.0.jobs.2.steps.5	{}
+"
+`;
