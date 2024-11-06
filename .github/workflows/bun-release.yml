@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    uses: jondotsoy/jondotsoy/.github/workflows/bun-release-package.yml@main
+    uses: jondotsoy/jondotsoy/.github/workflows/bun-release-package.yml@v1
     permissions:
       contents: write
       pull-requests: write
