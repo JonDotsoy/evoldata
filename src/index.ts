@@ -68,18 +68,14 @@ export namespace utils {
   export namespace path {
     export const serialize = (paths: Path[]) =>
       paths
-        .map((path) =>
-          `${path}`.replace(/\W/g, (c) =>
-            [".", "$"].includes(c) ? `$${c.charCodeAt(0)}` : c,
-          ),
-        )
+        .map((path) => `${path}`.replace(/\W/g, (c) => `%${c.charCodeAt(0)}`))
         .join(".");
 
     export const deserialize = (path: string) =>
       path
         .split(".")
         .map((part) =>
-          part.replace(/\$(\d+)/, (_, c) => String.fromCharCode(Number(c))),
+          part.replace(/\%(\d+)/, (_, c) => String.fromCharCode(Number(c))),
         )
         .map((e) => (/^\d+$/.test(e) ? Number(e) : e));
   }

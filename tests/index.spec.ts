@@ -110,28 +110,28 @@ describe("utils", () => {
 describe("path", () => {
   describe("serialize", () => {
     it("should serialize a path with special characters", () => {
-      expect(utils.path.serialize(["a", ".", "b"])).toEqual("a.$46.b");
+      expect(utils.path.serialize(["a", ".", "b"])).toEqual("a.%46.b");
     });
     it("should serialize a path with multiple special characters", () => {
-      expect(utils.path.serialize(["a", "$", ".", "b"])).toEqual("a.$36.$46.b");
+      expect(utils.path.serialize(["a", "$", ".", "b"])).toEqual("a.%36.%46.b");
     });
     it("should serialize a path with special characters and starting with '-'", () => {
       expect(utils.path.serialize(["-", "$", ".", "[]"])).toEqual(
-        "-.$36.$46.[]",
+        "%45.%36.%46.%91%93",
       );
     });
     it("should serialize a path with special characters, starting with '-' and containing a number", () => {
       expect(utils.path.serialize(["-", 10, "$", ".", "[]"])).toEqual(
-        "-.10.$36.$46.[]",
+        "%45.10.%36.%46.%91%93",
       );
     });
   });
   describe("desearilize", () => {
     it("should deserialize a path with special characters", () => {
-      expect(utils.path.deserialize("a.$46.b")).toEqual(["a", ".", "b"]);
+      expect(utils.path.deserialize("a.%46.b")).toEqual(["a", ".", "b"]);
     });
     it("should deserialize a path with multiple special characters", () => {
-      expect(utils.path.deserialize("a.$36.$46.b")).toEqual([
+      expect(utils.path.deserialize("a.%36.%46.b")).toEqual([
         "a",
         "$",
         ".",
@@ -139,7 +139,7 @@ describe("path", () => {
       ]);
     });
     it("should deserialize a path with special characters and starting with '-'", () => {
-      expect(utils.path.deserialize("-.$36.$46.[]")).toEqual([
+      expect(utils.path.deserialize("-.%36.%46.[]")).toEqual([
         "-",
         "$",
         ".",
@@ -147,7 +147,7 @@ describe("path", () => {
       ]);
     });
     it("should deserialize a path with special characters, starting with '-' and containing a number", () => {
-      expect(utils.path.deserialize("-.10.$36.$46.[]")).toEqual([
+      expect(utils.path.deserialize("-.10.%36.%46.[]")).toEqual([
         "-",
         10,
         "$",
