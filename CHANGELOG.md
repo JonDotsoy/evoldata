@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://github.com/JonDotsoy/evoldata/compare/evoldata-v0.12.0...evoldata-v0.12.1) (2024-11-06)
+
+
+### Bug Fixes
+
+* upgrade syntax to rewrite path symbols ([ef73355](https://github.com/JonDotsoy/evoldata/commit/ef73355643cae6a6b56fc0cd50e3feb4aecda7d0))
+
 ## [0.12.0](https://github.com/JonDotsoy/evoldata/compare/evoldata-v0.11.1...evoldata-v0.12.0) (2024-10-31)
 
 
