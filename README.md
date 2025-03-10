@@ -1,5 +1,7 @@
 # EVOLDATA
 
+[Versión en Español](./docs/es/README.md)
+
 This file format is designed to store structured data that evolves over time. It provides a flexible and efficient way to record changes to an object's properties. The format is human-readable and is compatible with common data interchange formats like JSON, YAML, or TOML, ensuring seamless integration with various systems.
 
 ## Example
