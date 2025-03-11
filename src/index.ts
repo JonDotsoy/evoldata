@@ -2,12 +2,19 @@ import { readableStreamToIterable, SplitStream } from "streamable-tools";
 
 type Payload = string;
 type Path = number | string;
-type Metadata = {
+type MetadataDelete = {
+  timestamp: number;
+  type: "-";
+  path: Path[];
+  value: undefined;
+};
+type MetadataUpdate = {
   timestamp: number;
   type: "=" | "+";
   path: Path[];
   value: unknown;
 };
+type Metadata = MetadataUpdate | MetadataDelete;
 
 export namespace utils {
   const isRecord = (
@@ -62,6 +69,17 @@ export namespace utils {
       parent[property].push(value);
     } else {
       parent[property] = [value];
+    }
+  };
+
+  export const del = (object: unknown, paths: Path[]) => {
+    const childPath = paths.slice(0, paths.length - 1);
+    const property = paths[paths.length - 1];
+
+    const child = selectChild(object, childPath, () => ({}));
+
+    if (isRecord(child)) {
+      child[property] = undefined;
     }
   };
 
@@ -134,11 +152,14 @@ export const parse = (payload: Payload): any => {
 
 export const stringifyLineEvent = (metadata: Metadata) => {
   const { timestamp, type, path, value } = metadata;
+  if (type === "-")
+    return `${timestamp}\t${type}\t${utils.path.serialize(path)}\n`;
   return `${timestamp}\t${type}\t${utils.path.serialize(path)}\t${JSON.stringify(value)}\n`;
 };
 
 export const createEventsWritable = () => {
   let controller: ReadableStreamDefaultController<Uint8Array> | null = null;
+
   const readable = new ReadableStream<Uint8Array>({
     start: (ctr) => {
       controller = ctr;
@@ -146,12 +167,21 @@ export const createEventsWritable = () => {
   });
 
   const makeEvent = (action: string, paths: Path[], value: unknown) => {
-    const chunk = stringifyLineEvent({
-      timestamp: Date.now(),
-      type: action as "=" | "+",
-      path: paths,
-      value,
-    });
+    const chunk = stringifyLineEvent(
+      action === "-"
+        ? {
+            timestamp: Date.now(),
+            type: action as "-",
+            path: paths,
+            value: undefined,
+          }
+        : {
+            timestamp: Date.now(),
+            type: action as "=" | "+",
+            path: paths,
+            value,
+          },
+    );
 
     controller?.enqueue(new TextEncoder().encode(chunk));
   };
@@ -161,11 +191,14 @@ export const createEventsWritable = () => {
     close: () => {
       controller?.close();
     },
-    set(path: Path[], value: unknown) {
+    set: (path: Path[], value: unknown) => {
       makeEvent("=", path, value);
     },
-    add(path: Path[], value: unknown) {
+    add: (path: Path[], value: unknown) => {
       makeEvent("+", path, value);
+    },
+    del: (path: Path[]) => {
+      makeEvent("-", path, undefined);
     },
   };
 };

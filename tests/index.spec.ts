@@ -250,6 +250,15 @@ it("utils.add() should not mutate the path array", () => {
   expect(path).toEqual(["a", "b", "c", "d"]);
 });
 
+it("utils.del() should not mutate the path array", () => {
+  const obj: any = { a: { b: { c: 3 } } };
+  const path: string[] = ["a", "b"];
+
+  utils.del(obj, path);
+
+  expect(obj).toEqual({ a: { b: undefined } });
+});
+
 it("createEventsWritable() should create a writable stream that emits events as strings in correct order", async () => {
   const { readable, set, add, close } = createEventsWritable();
 
