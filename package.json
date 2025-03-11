@@ -32,5 +32,12 @@
     "json5": "^2.2.3",
     "streamable-tools": "^0.3.0",
     "yaml": "^2.6.0"
-  }
+  },
+  "keywords": [
+    "evoldata",
+    "evolving data",
+    "data format",
+    "timestamped",
+    "change tracking"
+  ]
 }
