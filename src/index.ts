@@ -128,7 +128,7 @@ function* transformLines(buff: Uint8Array): Generator<Metadata> {
 
     yield {
       timestamp: timestampBuff,
-      type: action as "=" | "+",
+      type: action as "=" | "+" | "-",
       path,
       value,
     };
@@ -216,6 +216,9 @@ export class ParsingObjectStream extends TransformStream<Uint8Array, any> {
             }
             if (metadata.type === "+") {
               utils.add(this.#obj.context, metadata.path, metadata.value);
+            }
+            if (metadata.type === "-") {
+              utils.del(this.#obj.context, metadata.path);
             }
             controller.enqueue(this.#obj.context);
           }
