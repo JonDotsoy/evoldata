@@ -1,13 +1,21 @@
 import { readableStreamToIterable, SplitStream } from "streamable-tools";
+import { result } from "@jondotsoy/utils-js/result";
 
 type Payload = string;
 type Path = number | string;
-type Metadata = {
+type MetadataDelete = {
+  timestamp: number;
+  type: "-";
+  path: Path[];
+  value: undefined;
+};
+type MetadataUpdate = {
   timestamp: number;
   type: "=" | "+";
   path: Path[];
   value: unknown;
 };
+type Metadata = MetadataUpdate | MetadataDelete;
 
 export namespace utils {
   const isRecord = (
@@ -65,6 +73,17 @@ export namespace utils {
     }
   };
 
+  export const del = (object: unknown, paths: Path[]) => {
+    const childPath = paths.slice(0, paths.length - 1);
+    const property = paths[paths.length - 1];
+
+    const child = selectChild(object, childPath, () => ({}));
+
+    if (isRecord(child)) {
+      child[property] = undefined;
+    }
+  };
+
   export namespace path {
     export const serialize = (paths: Path[]) =>
       paths
@@ -87,30 +106,35 @@ const payloadToReadable = (payload: Payload) => {
   throw new Error("Payload must be a string");
 };
 
-const TAB_CODE = "\t".charCodeAt(0);
+const TAB_CHAR = "\t";
+const TAB_CODE = TAB_CHAR.charCodeAt(0);
 const NEW_LINE_CODE = "\n".charCodeAt(0);
 
+const findPart = (
+  buff: Uint8Array,
+  indexState: { current: number },
+  delimiter: number,
+) => {
+  const a = buff.indexOf(delimiter, indexState.current);
+  const po = a === -1 ? buff.length : a;
+  const part = buff.slice(indexState.current, po);
+  indexState.current = po + 1;
+  const chunk = new TextDecoder().decode(part);
+  return chunk;
+};
+
 function* transformLines(buff: Uint8Array): Generator<Metadata> {
-  let index = 0;
+  let indexState = { current: 0 };
 
-  const findPart = (delimiter: number) => {
-    const a = buff.indexOf(delimiter, index);
-    const po = a === -1 ? buff.length : a;
-    const part = buff.slice(index, po);
-    index = po + 1;
-    const chunk = new TextDecoder().decode(part);
-    return chunk;
-  };
-
-  while (index < buff.length) {
-    const timestampBuff = Number(findPart(TAB_CODE));
-    const action = findPart(TAB_CODE);
-    const path = utils.path.deserialize(findPart(TAB_CODE));
-    const value = JSON.parse(findPart(NEW_LINE_CODE));
+  while (indexState.current < buff.length) {
+    const timestampBuff = Number(findPart(buff, indexState, TAB_CODE));
+    const action = findPart(buff, indexState, TAB_CODE);
+    const path = utils.path.deserialize(findPart(buff, indexState, TAB_CODE));
+    const value = JSON.parse(findPart(buff, indexState, NEW_LINE_CODE));
 
     yield {
       timestamp: timestampBuff,
-      type: action as "=" | "+",
+      type: action as "=" | "+" | "-",
       path,
       value,
     };
@@ -134,11 +158,14 @@ export const parse = (payload: Payload): any => {
 
 export const stringifyLineEvent = (metadata: Metadata) => {
   const { timestamp, type, path, value } = metadata;
+  if (type === "-")
+    return `${timestamp}\t${type}\t${utils.path.serialize(path)}\n`;
   return `${timestamp}\t${type}\t${utils.path.serialize(path)}\t${JSON.stringify(value)}\n`;
 };
 
 export const createEventsWritable = () => {
   let controller: ReadableStreamDefaultController<Uint8Array> | null = null;
+
   const readable = new ReadableStream<Uint8Array>({
     start: (ctr) => {
       controller = ctr;
@@ -146,12 +173,21 @@ export const createEventsWritable = () => {
   });
 
   const makeEvent = (action: string, paths: Path[], value: unknown) => {
-    const chunk = stringifyLineEvent({
-      timestamp: Date.now(),
-      type: action as "=" | "+",
-      path: paths,
-      value,
-    });
+    const chunk = stringifyLineEvent(
+      action === "-"
+        ? {
+            timestamp: Date.now(),
+            type: action as "-",
+            path: paths,
+            value: undefined,
+          }
+        : {
+            timestamp: Date.now(),
+            type: action as "=" | "+",
+            path: paths,
+            value,
+          },
+    );
 
     controller?.enqueue(new TextEncoder().encode(chunk));
   };
@@ -161,41 +197,86 @@ export const createEventsWritable = () => {
     close: () => {
       controller?.close();
     },
-    set(path: Path[], value: unknown) {
+    set: (path: Path[], value: unknown) => {
       makeEvent("=", path, value);
     },
-    add(path: Path[], value: unknown) {
+    add: (path: Path[], value: unknown) => {
       makeEvent("+", path, value);
+    },
+    del: (path: Path[]) => {
+      makeEvent("-", path, undefined);
     },
   };
 };
 
+function* bufferTransformLines(
+  accumState: { current: Uint8Array },
+  inputBuff: Uint8Array,
+): Generator<Metadata> {
+  let buff = new Uint8Array([...accumState.current, ...inputBuff]);
+
+  while (true) {
+    const newLineIndex = buff.indexOf(NEW_LINE_CODE);
+    if (newLineIndex === -1) {
+      accumState.current = buff;
+      return;
+    }
+
+    const line = buff.slice(0, newLineIndex);
+    buff = buff.slice(newLineIndex + 1);
+
+    const [timestampPart, typePart, pathPart, valuePart] = new TextDecoder()
+      .decode(line)
+      .split(TAB_CHAR, 4);
+
+    if (!/^\d+$/.test(timestampPart)) continue;
+    if (!/^(\=|\+|\-)$/.test(typePart)) continue;
+    const [pathPartParseError, path] = result(() =>
+      utils.path.deserialize(pathPart),
+    );
+    if (pathPartParseError) continue;
+    const [valuePartParseError, value] = result(() => JSON.parse(valuePart));
+    if (valuePartParseError) continue;
+
+    yield {
+      timestamp: Number(timestampPart),
+      type: typePart as "=" | "+" | "-",
+      path: path,
+      value: value,
+    } as any;
+  }
+}
+
 export class ParsingObjectStream extends TransformStream<Uint8Array, any> {
   #obj: { context: any } = { context: {} };
+  #accumBuff = { current: new Uint8Array([]) };
 
   constructor() {
     super({
       transform: async (chunk, controller) => {
         try {
-          for (const metadata of transformLines(chunk)) {
+          for (const metadata of bufferTransformLines(this.#accumBuff, chunk)) {
             if (metadata.type === "=") {
               utils.set(this.#obj.context, metadata.path, metadata.value);
             }
             if (metadata.type === "+") {
               utils.add(this.#obj.context, metadata.path, metadata.value);
             }
-            controller.enqueue(this.#obj.context);
+            if (metadata.type === "-") {
+              utils.del(this.#obj.context, metadata.path);
+            }
           }
-        } catch {}
+          controller.enqueue(this.#obj.context);
+        } catch (ex) {
+          console.error(ex);
+        }
       },
     });
   }
 
   static iterable(readable: ReadableStream<Uint8Array>) {
     return readableStreamToIterable(
-      readable
-        .pipeThrough(new SplitStream())
-        .pipeThrough(new ParsingObjectStream()),
+      readable.pipeThrough(new ParsingObjectStream()),
     );
   }
 
