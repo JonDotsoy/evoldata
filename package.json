@@ -1,6 +1,6 @@
 {
   "name": "evoldata",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "module": "lib/esm/index.js",
   "main": "lib/esm/index.js",
   "types": "lib/types/index.d.ts",
