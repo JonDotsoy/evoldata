@@ -15,6 +15,7 @@
   "description": "A library for efficiently managing and manipulating evolving data structures in JavaScript.",
   "scripts": {
     "prepack": "make build",
+    "lint": "prettier -c .",
     "fmt": "prettier -w ."
   },
   "type": "module",
