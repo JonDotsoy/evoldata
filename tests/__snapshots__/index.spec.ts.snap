@@ -195,6 +195,38 @@ exports[`StreamSnapParsing should parse a stream of events into an array of obje
     "delay": 100,
     "logs": [
       "Connected to server.",
+      
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+    ],
+    "pid": 1000,
+    "state": "unstable",
+  },
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04",
+  },
+  "server": {
+    "commands": [
+      "date",
+    ],
+    "ip": "10.0.0.1",
+    "port": 22,
+  },
+}
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 12`] = `
+{
+  "client": {
+    "delay": 100,
+    "logs": [
+      "Connected to server.",
+      
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
     ],
     "pid": 1000,
     "state": "unstable",
@@ -212,6 +244,411 @@ exports[`StreamSnapParsing should parse a stream of events into an array of obje
     "port": 22,
   },
 }
+`;
+
+exports[`StreamSnapParsing should parse a stream of events into an array of objects 13`] = `
+[
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+]
+`;
+
+exports[`ParsingObjectStream should parse a stream of events into an array of objects with all data in one chunk 1`] = `
+[
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+]
+`;
+
+exports[`ParsingObjectStream should parse a stream of events into an array of objects with multiple chunks 1`] = `
+[
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+  {
+    "client": {
+      "delay": 100,
+      "logs": [
+        "Connected to server.",
+        
+"Sun Oct 27 12:12:48 -03 2024
+"
+,
+      ],
+      "pid": 1000,
+      "state": "unstable",
+    },
+    "done": true,
+    "owner": {
+      "name": "John",
+      "runOn": "Ubuntu 30.04",
+    },
+    "server": {
+      "commands": [
+        "date",
+      ],
+      "ip": "10.0.0.1",
+      "port": 22,
+    },
+  },
+]
 `;
 
 exports[`ParsingObjectStream.store() should create a store that updates on each event 1`] = `
@@ -408,7 +845,34 @@ exports[`ParsingObjectStream.store() should create a store that updates on each 
     "state": "unstable",
     "pid": 1000,
     "logs": [
-      "Connected to server."
+      "Connected to server.",
+      "Sun Oct 27 12:12:48 -03 2024\\n"
+    ],
+    "delay": 100
+  }
+}"
+,
+  ],
+  [
+    
+"{
+  "owner": {
+    "name": "John",
+    "runOn": "Ubuntu 30.04"
+  },
+  "server": {
+    "ip": "10.0.0.1",
+    "port": 22,
+    "commands": [
+      "date"
+    ]
+  },
+  "client": {
+    "state": "unstable",
+    "pid": 1000,
+    "logs": [
+      "Connected to server.",
+      "Sun Oct 27 12:12:48 -03 2024\\n"
     ],
     "delay": 100
   },

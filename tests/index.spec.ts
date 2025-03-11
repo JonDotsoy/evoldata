@@ -1,12 +1,12 @@
-import * as YAML from "yaml";
-import { describe, it, expect, mock, setSystemTime, beforeAll } from "bun:test";
+import { describe, it, expect, mock, setSystemTime } from "bun:test";
 import {
   parse,
   utils,
   createEventsWritable,
   ParsingObjectStream,
 } from "../src";
-import { SplitStream, readableStreamToIterable } from "streamable-tools";
+import { readableStreamToIterable } from "streamable-tools";
+import { readableStreamToText } from "bun";
 
 setSystemTime(1730041100000);
 
@@ -197,7 +197,7 @@ const createSampleReadable = () =>
       line(`1730041400000	=	client.delay	100`);
       line(`1730041500000	=	client.state	"unstable"`);
       line(`1730041500000	+	server.commands	"date"`);
-      line(`1730041600000	+	client.logs	"Sun Oct 27 12:12:48 -03 2024\n"`);
+      line(`1730041600000	+	client.logs	"Sun Oct 27 12:12:48 -03 2024\\n"`);
       line(`1730041600000	=	done	true`);
 
       ctrl.close();
@@ -205,12 +205,66 @@ const createSampleReadable = () =>
   });
 
 it("StreamSnapParsing should parse a stream of events into an array of objects", async () => {
-  const readable = createSampleReadable()
-    .pipeThrough(new SplitStream())
-    .pipeThrough(new ParsingObjectStream());
+  const readable = createSampleReadable().pipeThrough(
+    new ParsingObjectStream(),
+  );
   for await (const snap of readableStreamToIterable(readable)) {
     expect(snap).toMatchSnapshot();
   }
+});
+
+it("StreamSnapParsing should parse a stream of events into an array of objects", async () => {
+  const readable = createSampleReadable().pipeThrough(
+    new ParsingObjectStream(),
+  );
+
+  expect(
+    await Array.fromAsync(readableStreamToIterable(readable)),
+  ).toMatchSnapshot();
+});
+
+it("ParsingObjectStream should parse a stream of events into an array of objects with all data in one chunk", async () => {
+  const readable = new ReadableStream<Uint8Array>({
+    start: async (ctrl) => {
+      ctrl.enqueue(
+        new TextEncoder().encode(
+          await readableStreamToText(createSampleReadable()),
+        ),
+      );
+      ctrl.close();
+    },
+  }).pipeThrough(new ParsingObjectStream());
+
+  expect(
+    await Array.fromAsync(readableStreamToIterable(readable)),
+  ).toMatchSnapshot();
+});
+
+it("ParsingObjectStream should parse a stream of events into an array of objects with multiple chunks", async () => {
+  const readable = new ReadableStream<Uint8Array>({
+    start: async (ctrl) => {
+      const body = await readableStreamToText(createSampleReadable());
+      const lines = body.split("\n").filter(Boolean);
+
+      const part1 = lines
+        .slice(0, 2)
+        .map((l) => `${l}\n`)
+        .join("");
+      const part2 = lines
+        .splice(2)
+        .map((l) => `${l}\n`)
+        .join("");
+
+      ctrl.enqueue(new TextEncoder().encode(part1));
+      ctrl.enqueue(new TextEncoder().encode(part2));
+
+      ctrl.close();
+    },
+  }).pipeThrough(new ParsingObjectStream());
+
+  expect(
+    await Array.fromAsync(readableStreamToIterable(readable)),
+  ).toMatchSnapshot();
 });
 
 it("ParsingObjectStream.store() should create a store that updates on each event", async () => {
@@ -228,7 +282,7 @@ it("ParsingObjectStream.store() should create a store that updates on each event
     });
   });
 
-  expect(update).toBeCalledTimes(12);
+  expect(update).toBeCalledTimes(13);
   expect(update.mock.calls).toMatchSnapshot();
 });
 
