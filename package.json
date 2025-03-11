@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@jondotsoy/flags": "^2.2.0",
+    "@jondotsoy/utils-js": "^0.6.0",
     "json5": "^2.2.3",
     "streamable-tools": "^0.3.0",
     "yaml": "^2.6.0"
