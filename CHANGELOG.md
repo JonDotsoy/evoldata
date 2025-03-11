@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.13.0](https://github.com/JonDotsoy/evoldata/compare/evoldata-v0.12.0...evoldata-v0.13.0) (2025-03-11)
+
+
+### Features
+
+* **ci:** Rename workflow and add linting step ([282cde6](https://github.com/JonDotsoy/evoldata/commit/282cde6d034f275a264003138cca5bfe326cd30c))
+* Improve ParsingObjectStream and add tests ([2091d93](https://github.com/JonDotsoy/evoldata/commit/2091d930782a56efe2ce06204b917da27847b96d))
+* **parsing:** add support for deleting properties ([ea78ece](https://github.com/JonDotsoy/evoldata/commit/ea78ecec500f12868ced75a3f9cae7341c313985))
+* **utils:** add `del()` function to delete properties ([8df5ba2](https://github.com/JonDotsoy/evoldata/commit/8df5ba2dc0347f9d19891ce97a91a31a69979f6c))
+
+
+### Bug Fixes
+
+* upgrade syntax to rewrite path symbols ([ef73355](https://github.com/JonDotsoy/evoldata/commit/ef73355643cae6a6b56fc0cd50e3feb4aecda7d0))
+
 ## [0.12.0](https://github.com/JonDotsoy/evoldata/compare/evoldata-v0.11.1...evoldata-v0.12.0) (2024-10-31)
 
 
