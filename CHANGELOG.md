@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.13.2](https://github.com/JonDotsoy/evoldata/compare/evoldata-v0.13.1...evoldata-v0.13.2) (2025-03-11)
+
+
+### Performance Improvements
+
+* add "versioned data" to package.json keywords ([8bf5d0e](https://github.com/JonDotsoy/evoldata/commit/8bf5d0ea58d6bc27531ce9824af98a1f53ec53da))
+* add "versioned data" to package.json keywords ([7218af4](https://github.com/JonDotsoy/evoldata/commit/7218af4913c7dfdf8a37fbd610454745e103c91f))
+
 ## [0.13.1](https://github.com/JonDotsoy/evoldata/compare/evoldata-v0.13.0...evoldata-v0.13.1) (2025-03-11)
 
 
